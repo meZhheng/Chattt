@@ -211,6 +211,9 @@ else:
   train_data = data["train"].shuffle().map(generate_and_tokenize_prompt)
   val_data = None
 
+print(train_data)
+print(val_data)
+
 trainer = transformers.Trainer(
   model=model,
   train_dataset=train_data,
@@ -219,7 +222,6 @@ trainer = transformers.Trainer(
     per_device_train_batch_size=MICRO_BATCH_SIZE,
     gradient_accumulation_steps=GRADIENT_ACCUMULATION_STEPS,
     warmup_steps=100,
-    num_train_epochs=EPOCHS,
     max_steps=MAX_STEPS,
     learning_rate=LEARNING_RATE,
     fp16=True,
@@ -237,7 +239,7 @@ trainer = transformers.Trainer(
   ),
   data_collator=transformers.DataCollatorForLanguageModeling(tokenizer, mlm=False)
 )
-model.config.use_cache = False
+# model.config.use_cache = False
 
 old_state_dict = model.state_dict
 model.state_dict = (
